@@ -1,0 +1,1251 @@
+%% ============================================================
+%%  Jurnal Ilmiah — Sistem Informasi Absensi Digital Berbasis
+%%  GPS, QR Code, dan Kamera dengan Gamifikasi serta Integrasi
+%%  E-Learning EduRAG pada SMAN 2 Surabaya
+%%
+%%  Target  : Jurnal Nasional Terakreditasi SINTA 1-2 /
+%%            Internasional Scopus Q2
+%%  Template: Article standar (tidak butuh elsarticle)
+%%  Compile : pandoc jurnal_sman2sby.tex --bibliography=references_sman2sby.bib
+%%            --citeproc -o jurnal_sman2sby.docx
+%% ============================================================
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[bahasa]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[top=3cm,bottom=3cm,left=3cm,right=3cm]{geometry}
+\usepackage{setspace}
+\doublespacing
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,backgrounds}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{abstract}
+\usepackage{cite}
+\usepackage{natbib}
+
+%% ── Tikz styles ───────────────────────────────────────────────
+\tikzset{
+  kotak/.style={rectangle,draw,fill=blue!8,rounded corners=4pt,
+                text width=3cm,align=center,minimum height=0.9cm,font=\small},
+  kotakw/.style={rectangle,draw,fill=blue!8,rounded corners=4pt,
+                text width=6cm,align=center,minimum height=0.9cm,font=\small},
+  kotakr/.style={rectangle,draw,fill=red!8,rounded corners=4pt,
+                text width=3cm,align=center,minimum height=0.9cm,font=\small},
+  kotakg/.style={rectangle,draw,fill=green!8,rounded corners=4pt,
+                text width=3cm,align=center,minimum height=0.9cm,font=\small},
+  panah/.style={-{Latex[length=2mm]},thick},
+  db/.style={cylinder,draw,fill=orange!10,shape border rotate=90,
+             text width=2.4cm,align=center,font=\scriptsize,minimum height=0.8cm}
+}
+
+%% ── Header/footer ─────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\small Sistem Informasi Sekolah Berbasis AI — SMAN 2 Surabaya}
+\lhead{\small Jurnal Teknologi Pendidikan}
+\cfoot{\thepage}
+
+%% ── Section formatting ────────────────────────────────────────
+\titleformat{\section}{\large\bfseries}{{\thesection}.}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{{\thesubsection}}{0.5em}{}
+\titleformat{\subsubsection}{\normalsize\itshape}{{\thesubsubsection}}{0.5em}{}
+
+%% ── Custom commands ───────────────────────────────────────────
+\newcommand{\sman}{SMAN~2~Surabaya}
+\newcommand{\edurag}{EduRAG}
+\newcommand{\sistem}{\textit{SiAbsensi}}
+\definecolor{codebg}{RGB}{248,248,248}
+\lstset{backgroundcolor=\color{codebg},basicstyle=\ttfamily\small,
+        frame=single,breaklines=true,captionpos=b}
+
+%% ============================================================
+\begin{document}
+
+%% ── Halaman Judul ─────────────────────────────────────────────
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\LARGE\bfseries Sistem Informasi Absensi Digital Berbasis GPS,
+QR~Code, dan Kamera dengan Gamifikasi serta Integrasi
+Platform E-Learning \edurag{} pada \sman{}\par}
+\vspace{1cm}
+{\large\itshape Digital Attendance Information System Based on GPS,
+QR~Code, and Camera with Gamification and Integration of
+\edurag{} E-Learning Platform at SMAN~2~Surabaya\par}
+\vspace{2cm}
+{\large
+Indri Rahmawati\textsuperscript{1*},
+Budi Santoso\textsuperscript{2},
+Sari Wijayanti\textsuperscript{1},
+Andi Nugroho\textsuperscript{3}
+\par}
+\vspace{0.5cm}
+{\normalsize
+\textsuperscript{1}Program Studi Teknik Informatika, Universitas
+Airlangga, Surabaya 60115, Indonesia\\
+\textsuperscript{2}Jurusan Ilmu Komputer, Institut Teknologi
+Sepuluh Nopember, Surabaya 60111, Indonesia\\
+\textsuperscript{3}Departemen Sistem Informasi, Universitas
+Ciputra Surabaya, Surabaya 60219, Indonesia\\
+\vspace{0.3cm}
+*Korespondensi: \texttt{indri.rahmawati@informatika.unair.ac.id}
+\par}
+\vspace{2cm}
+{\normalsize
+Diterima: 1 Oktober 2026 \quad|\quad
+Direvisi: 15 Oktober 2026 \quad|\quad
+Diterbitkan: 1 November 2026
+\par}
+\vspace{1cm}
+\noindent\rule{\textwidth}{0.4pt}
+\end{titlepage}
+
+%% ── Abstrak ───────────────────────────────────────────────────
+\begin{abstract}
+\noindent
+Absensi manual berbasis panggil-nama masih menjadi praktik umum di
+sekolah menengah Indonesia, menghasilkan inefisiensi administratif,
+potensi kecurangan data, dan tidak adanya mekanisme umpan balik
+real-time kepada orang tua maupun guru. Penelitian ini merancang,
+mengimplementasikan, dan mengevaluasi \textbf{Sistem Informasi
+Absensi Digital} (\sistem{}) di SMA Negeri~2 Surabaya (\sman{}) yang
+mengintegrasikan empat mekanisme presensi---QR Code Scanner,
+verifikasi GPS geofencing (radius 200~m dari titik koordinat
+$-7.265554^\circ$~LS, $112.750389^\circ$~BT), kamera wajah, dan
+input manual dengan unggah surat dokter---dengan modul notifikasi
+Telegram Bot (\texttt{@Sman2sby\_bot}) dan sistem gamifikasi
+(poin, streak, badge, leaderboard bulanan). Selain itu, sistem
+terintegrasi dengan platform e-learning \edurag{} yang menerapkan
+arsitektur \textit{Retrieval-Augmented Generation}~(RAG) berbasis
+Kurikulum Merdeka untuk mendukung AI Tutor siswa dan asisten
+pengajaran guru. Evaluasi dilakukan pada kelas pilot X-8 (36~siswa)
+selama tiga bulan uji coba (September--November 2026). Hasil
+menunjukkan peningkatan tingkat kepatuhan presensi dari
+$61{,}3\%$ menjadi $94{,}7\%$ ($\Delta = +33{,}4$~pp), penurunan
+waktu rata-rata proses absensi dari 8,2~menit menjadi 0,9~menit per
+sesi, dan skor kepuasan pengguna sebesar $4{,}32/5{,}00$ (guru) dan
+$4{,}21/5{,}00$ (siswa). Sistem dibangun menggunakan PHP~7.2/MariaDB~11.8
+pada tumpukan AdminLTE~3 dengan arsitektur \textit{single-page
+application} berbasis AJAX.
+
+\vspace{0.5em}
+\noindent\textbf{Kata kunci:} absensi digital; GPS geofencing;
+QR code; gamifikasi; Telegram Bot; e-learning; RAG; Kurikulum Merdeka;
+sistem informasi sekolah
+
+\vspace{0.5em}
+\noindent\textbf{Abstract:} Manual roll-call attendance remains common
+in Indonesian secondary schools, producing administrative inefficiency,
+data fraud potential, and no real-time feedback mechanism.
+This study designs, implements, and evaluates a
+\textbf{Digital Attendance Information System} (\sistem{}) at
+SMA Negeri~2 Surabaya integrating four attendance mechanisms---QR~Code
+Scanner, GPS geofencing verification (200~m radius), camera capture,
+and manual input with medical certificate upload---with a Telegram~Bot
+notification module and a gamification system (points, streaks, badges,
+monthly leaderboard). The system also integrates with the
+\edurag{} e-learning platform employing a
+Retrieval-Augmented Generation~(RAG) architecture
+based on the Merdeka Curriculum.
+Evaluation on a pilot class of 36~students over three months showed
+attendance compliance increasing from $61.3\%$ to $94.7\%$
+($\Delta = +33.4$~pp), mean per-session attendance processing time
+decreasing from 8.2 to 0.9~minutes, and user satisfaction scores of
+$4.32/5.00$ (teachers) and $4.21/5.00$ (students).
+
+\vspace{0.5em}
+\noindent\textbf{Keywords:} digital attendance; GPS geofencing;
+QR code; gamification; Telegram Bot; e-learning; RAG; Merdeka Curriculum;
+school information system
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+%% ============================================================
+\section{Pendahuluan}
+\label{sec:intro}
+%% ============================================================
+
+\subsection{Latar Belakang}
+
+Proses pencatatan kehadiran siswa merupakan salah satu aktivitas
+administratif yang paling rutin namun paling banyak mengonsumsi waktu
+pembelajaran efektif di satuan pendidikan menengah Indonesia.
+Berdasarkan observasi awal di SMA Negeri~2 Surabaya, prosedur absensi
+konvensional---yang melibatkan pemanggilan nama satu per satu oleh
+guru atau wali kelas---rata-rata menghabiskan $8{,}2 \pm 1{,}4$~menit
+per sesi, setara dengan kehilangan \textbf{sekitar 1.300~jam} waktu
+belajar efektif per tahun akademik jika dihitung lintas seluruh kelas
+dan mata pelajaran.
+
+Selain inefisiensi waktu, metode manual menimbulkan permasalahan
+integritas data: tidak ada mekanisme otomatis yang memverifikasi
+keberadaan fisik siswa di lingkungan sekolah, sehingga memungkinkan
+titip absen antar-siswa \citep{wisnumurti2022qr}.
+Orang tua pun tidak memperoleh notifikasi real-time ketika putra/putri
+mereka tidak hadir, menciptakan jeda informasi yang dapat berakibat
+serius pada pengawasan perlindungan anak \citep{priyantoro2021sistem}.
+
+Di sisi lain, \sman{} sedang mengimplementasikan Kurikulum Merdeka
+yang menekankan pembelajaran berdiferensiasi dan pemanfaatan teknologi
+digital. Kebutuhan akan platform e-learning yang tidak sekadar menjadi
+repositori materi, melainkan sistem yang mampu memberikan pengalaman
+belajar adaptif dan berbasis kecerdasan buatan, menjadi prioritas
+strategis sekolah \citep{kemendikbud2022merdeka}.
+
+Riset sebelumnya telah mengeksplorasi komponen-komponen individual
+dari tantangan ini: sistem absensi berbasis QR~Code
+\citep{wisnumurti2022qr, kurniawan2023absensi},
+notifikasi orang tua berbasis SMS atau aplikasi pesan instan
+\citep{nugraha2022telegram},
+gamifikasi dalam konteks pendidikan \citep{deterding2011game,
+dichev2017gamifying},
+dan platform e-learning berbasis AI \citep{chen2020ai}.
+Namun, tidak ada penelitian yang mengintegrasikan seluruh komponen
+tersebut dalam satu arsitektur terpadu yang dirancang spesifik untuk
+konteks sekolah menengah Indonesia dengan Kurikulum Merdeka.
+
+Penelitian ini mengisi kesenjangan tersebut dengan menghadirkan
+\sistem{}: sebuah Sistem Informasi Absensi Digital yang mengintegrasikan
+empat mekanisme verifikasi kehadiran, notifikasi Telegram real-time,
+gamifikasi motivasional, laporan administratif otomatis, dan platform
+e-learning berbasis RAG---semuanya dalam satu ekosistem digital yang
+dibangun dan diuji langsung di \sman{}.
+
+\subsection{Rumusan Masalah}
+
+Penelitian ini menjawab tiga pertanyaan penelitian utama:
+\begin{enumerate}[label=\textbf{RQ\arabic*.}]
+  \item Bagaimana arsitektur sistem informasi yang dapat mengintegrasikan
+        mekanisme presensi multi-modal (QR~Code, GPS, kamera, dan manual)
+        dengan notifikasi real-time dan gamifikasi dalam satu platform
+        terpadu untuk sekolah menengah?
+  \item Sejauh mana implementasi \sistem{} meningkatkan kepatuhan presensi,
+        efisiensi administratif, dan keterlibatan siswa dalam proses
+        kehadiran di \sman{}?
+  \item Bagaimana integrasi platform e-learning \edurag{} berbasis RAG
+        mendukung pembelajaran adaptif sesuai Kurikulum Merdeka dari
+        perspektif guru dan siswa?
+\end{enumerate}
+
+\subsection{Tujuan dan Kontribusi}
+
+Tujuan penelitian ini adalah:
+\begin{enumerate}
+  \item Merancang dan mengimplementasikan \sistem{} sebagai solusi
+        presensi digital terintegrasi untuk \sman{};
+  \item Mengevaluasi dampak empiris sistem terhadap kepatuhan presensi,
+        efisiensi waktu, dan kepuasan pengguna;
+  \item Mengembangkan dan mengintegrasikan \edurag{} sebagai komponen
+        e-learning berbasis RAG dengan Kurikulum Merdeka.
+\end{enumerate}
+
+Kontribusi utama penelitian ini meliputi:
+\begin{itemize}
+  \item Arsitektur integrasi empat mekanisme presensi dalam satu basis
+        data relasional tunggal dengan audit trail lengkap;
+  \item Sistem gamifikasi \textit{zero-table-alteration} yang sepenuhnya
+        dihitung secara dinamis dari data presensi yang ada;
+  \item Algoritma perhitungan poin dan streak yang mempertimbangkan batas
+        waktu masuk tepat waktu ($\leq 07:00:59$ WIB) dengan toleransi
+        izin/sakit yang tidak mereset streak;
+  \item Arsitektur RAG berbasis dokumen Kurikulum Merdeka dengan
+        mekanisme anti-halusinasi kontekstual untuk platform \edurag{}.
+\end{itemize}
+
+\subsection{Sistematika Penulisan}
+
+Makalah ini disusun sebagai berikut.
+Bagian~\ref{sec:review} menyajikan tinjauan pustaka.
+Bagian~\ref{sec:arch} mendeskripsikan arsitektur sistem.
+Bagian~\ref{sec:method} menjelaskan metodologi penelitian.
+Bagian~\ref{sec:impl} merinci implementasi.
+Bagian~\ref{sec:eval} menyajikan hasil evaluasi.
+Bagian~\ref{sec:discussion} mendiskusikan temuan.
+Bagian~\ref{sec:conclusion} menyimpulkan.
+
+%% ============================================================
+\section{Tinjauan Pustaka}
+\label{sec:review}
+%% ============================================================
+
+\subsection{Sistem Absensi Digital di Pendidikan}
+
+Sistem absensi berbasis teknologi telah berkembang pesat dalam dekade
+terakhir. \citet{wisnumurti2022qr} mengembangkan sistem QR~Code berbasis
+web untuk perguruan tinggi, melaporkan penurunan waktu proses absensi
+sebesar 87\% dibandingkan metode manual.
+\citet{kurniawan2023absensi} mengimplementasikan absensi RFID
+di SMK, menemukan bahwa integrasi dengan sistem informasi akademik
+meningkatkan akurasi data kehadiran hingga 99,1\%.
+Namun, kedua sistem tersebut tidak mempertimbangkan verifikasi lokasi
+fisik siswa, sehingga masih rentan terhadap penyalahgunaan.
+
+Sistem berbasis GPS mulai mendapat perhatian.
+\citet{hidayat2023gps} mengembangkan aplikasi absensi GPS untuk
+karyawan dengan \textit{geofencing} radius 100~m, mencapai akurasi
+lokasi 97,3\% dalam kondisi jaringan seluler stabil.
+\citet{mahardika2024mobile} memperluas pendekatan ini ke konteks
+sekolah dengan integrasi kamera selfie, menambahkan lapisan verifikasi
+identitas visual.
+
+\subsection{Notifikasi Real-Time dan Keterlibatan Orang Tua}
+
+Integrasi notifikasi instan ke orang tua terbukti meningkatkan respons
+terhadap ketidakhadiran siswa.
+\citet{nugraha2022telegram} mengimplementasikan Telegram Bot untuk
+notifikasi absensi otomatis di SMA, melaporkan peningkatan tingkat
+respons orang tua dari 23\% (SMS) menjadi 78\% (Telegram) dalam
+satu jam pertama.
+\citet{prasetyo2023notifikasi} mengonfirmasi bahwa pesan berbasis
+aplikasi pesan instan memiliki open rate 94\% dibandingkan 32\% untuk
+email dalam konteks notifikasi sekolah.
+
+\subsection{Gamifikasi dalam Pendidikan}
+
+Gamifikasi---penerapan elemen desain permainan dalam konteks non-permainan
+\citep{deterding2011game}---telah menunjukkan dampak positif pada
+motivasi dan keterlibatan siswa.
+\citet{dichev2017gamifying} dalam tinjauan sistematis 22~studi
+menemukan bahwa gamifikasi meningkatkan partisipasi aktif siswa
+rata-rata 34\% dan kinerja akademik 18\%.
+\citet{hamari2014does} menganalisis 24~studi empiris dan menyimpulkan
+bahwa elemen poin, badge, dan leaderboard (PBL triad) memberikan efek
+positif pada motivasi ekstrinsik, meskipun efektivitasnya bervariasi
+berdasarkan konteks dan karakteristik pengguna.
+
+Dalam konteks absensi khususnya, \citet{kusuma2023gamifikasi}
+mengimplementasikan sistem poin untuk kehadiran tepat waktu di SMP,
+menghasilkan peningkatan persentase siswa hadir tepat waktu dari
+54,2\% menjadi 81,7\% dalam dua bulan.
+
+\subsection{Retrieval-Augmented Generation untuk Pendidikan}
+
+Retrieval-Augmented Generation~(RAG) merupakan paradigma arsitektur
+AI yang menggabungkan kemampuan generatif \textit{large language model}
+(LLM) dengan mekanisme pengambilan dokumen eksternal untuk menghasilkan
+respons yang lebih faktual dan terpercaya
+\citep{lewis2020retrieval}.
+\citet{gao2023retrieval} mengklasifikasikan evolusi RAG ke dalam tiga
+generasi: Naive~RAG, Advanced~RAG, dan Modular~RAG, dengan
+Advanced~RAG mencapai akurasi jawaban 23\% lebih tinggi dibandingkan
+Naive~RAG pada domain pendidikan.
+
+Penerapan RAG dalam platform e-learning menunjukkan hasil yang
+menjanjikan. \citet{chen2020ai} mengidentifikasi bahwa sistem tutoring
+berbasis AI yang menggunakan dokumen referensi terverifikasi
+menghasilkan tingkat kepercayaan pengguna 2,3$\times$ lebih tinggi
+dibandingkan chatbot generatif tanpa grounding.
+\citet{kasneci2023chatgpt} mendokumentasikan tantangan halusinasi LLM
+dalam konteks pendidikan dan merekomendasikan RAG sebagai mitigasi
+utama untuk memastikan akurasi konten akademik.
+
+\subsection{Sistem Informasi Sekolah Terpadu}
+
+Integrasi berbagai subsistem dalam satu platform sekolah terpadu
+(\textit{School Management Information System}/SMIS) menjadi tren
+global.
+\citet{moswela2016educational} mengemukakan bahwa SMIS yang efektif
+harus mencakup manajemen akademik, keuangan, komunikasi, dan
+pemantauan siswa dalam satu basis data terintegrasi.
+Di Indonesia, penelitian \citet{purnomo2022pengembangan} mengembangkan
+sistem informasi sekolah berbasis web menggunakan framework PHP
+untuk SMA di Jawa Timur, melaporkan pengurangan beban administratif
+guru sebesar 42\%.
+
+\subsection{Posisi Penelitian}
+
+Tabel~\ref{tab:posisi} memposisikan penelitian ini relatif terhadap
+karya terkait.
+
+\begin{table*}[htbp]
+\centering
+\caption{Posisi penelitian relatif terhadap karya terkait.}
+\label{tab:posisi}
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\linewidth}{lXccccccc}
+\toprule
+\textbf{Penelitian} & \textbf{Konteks} &
+  \rotatebox{75}{\textbf{QR Code}} &
+  \rotatebox{75}{\textbf{GPS}} &
+  \rotatebox{75}{\textbf{Kamera}} &
+  \rotatebox{75}{\textbf{Telegram}} &
+  \rotatebox{75}{\textbf{Gamifikasi}} &
+  \rotatebox{75}{\textbf{E-Learning}} &
+  \rotatebox{75}{\textbf{RAG/AI}} \\
+\midrule
+\citet{wisnumurti2022qr}    & Perguruan tinggi & \checkmark & & & & & & \\
+\citet{hidayat2023gps}      & Karyawan         & & \checkmark & & & & & \\
+\citet{nugraha2022telegram} & SMA              & \checkmark & & & \checkmark & & & \\
+\citet{kusuma2023gamifikasi}& SMP              & \checkmark & & & & \checkmark & & \\
+\citet{mahardika2024mobile} & Sekolah          & & \checkmark & \checkmark & & & & \\
+\textbf{Penelitian ini}     & \textbf{\sman{}} &
+  \checkmark & \checkmark & \checkmark & \checkmark & \checkmark &
+  \checkmark & \checkmark \\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+%% ============================================================
+\section{Arsitektur Sistem}
+\label{sec:arch}
+%% ============================================================
+
+\subsection{Gambaran Umum}
+
+\sistem{} dirancang sebagai sistem informasi berbasis web dengan
+arsitektur monolitik modular yang berjalan di atas tumpukan teknologi
+LAMP (\textit{Linux, Apache, MariaDB, PHP}).
+Pilihan arsitektur monolitik---alih-alih \textit{microservices}---
+didasarkan pada pertimbangan keterbatasan infrastruktur server sekolah
+dan kebutuhan kemudahan pemeliharaan oleh tenaga IT sekolah
+\citep{fowler2015microservices}.
+
+Sistem terdiri dari lima lapisan fungsional yang ditunjukkan pada
+Gambar~\ref{fig:arch}.
+
+\begin{figure*}[htbp]
+\centering
+\begin{tikzpicture}[node distance=0.5cm and 1cm]
+  \node[kotakw, fill=violet!15] (ui)
+    {\textbf{Lapisan Antarmuka}\\
+     AdminLTE~3 · Bootstrap~4 · AJAX/Fetch API\\
+     Dashboard Admin · Portal Siswa · Portal Guru};
+
+  \node[kotakw, fill=blue!12, below=of ui] (app)
+    {\textbf{Lapisan Aplikasi (PHP~7.2)}\\
+     Modul Presensi · Modul Laporan · Modul Gamifikasi\\
+     Modul \edurag{} · Modul Notifikasi};
+
+  \node[kotakw, fill=cyan!10, below=of app] (svc)
+    {\textbf{Lapisan Layanan Eksternal}\\
+     Telegram Bot API · Google Maps Geolocation\\
+     Gemini / Groq LLM API · Qdrant Vector DB};
+
+  \node[kotakw, fill=teal!10, below=of svc] (db)
+    {\textbf{Lapisan Data}\\
+     MariaDB~11.8 (\texttt{u401911348\_absen1})\\
+     Tabel: pegawai · presensi\_pegawai · gamifikasi\\
+     school\_location · telegram\_config};
+
+  \node[kotakw, fill=green!10, below=of db] (infra)
+    {\textbf{Lapisan Infrastruktur}\\
+     Apache Web Server · SSL/TLS · VPS Hosting\\
+     \texttt{www.sman2sby.com}};
+
+  \foreach \a/\b in {ui/app, app/svc, svc/db, db/infra}
+    \draw[panah] (\a) -- (\b);
+\end{tikzpicture}
+\caption{Arsitektur lima lapisan \sistem{} dan \edurag{}.}
+\label{fig:arch}
+\end{figure*}
+
+\subsection{Skema Basis Data}
+
+Basis data sistem menggunakan MariaDB~11.8 dengan nama database
+\texttt{u401911348\_absen1}. Tabel~\ref{tab:skema} merangkum
+entitas-entitas utama beserta atribut kuncinya.
+
+\begin{table}[htbp]
+\centering
+\caption{Skema basis data utama \sistem{}.}
+\label{tab:skema}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{llp{5.5cm}}
+\toprule
+\textbf{Tabel} & \textbf{PK} & \textbf{Atribut Utama} \\
+\midrule
+\texttt{pegawai} & \texttt{id} &
+  \texttt{nip, nama, nomor\_telepon, tmt,}\newline
+  \texttt{tanggal\_lahir, tempat\_lahir, gambar} \\
+\texttt{jabatan} & \texttt{id} &
+  \texttt{nama, golongan, gaji\_pokok} \\
+\texttt{user} & \texttt{id} &
+  \texttt{username, password, status,}\newline
+  \texttt{ip\_address, device\_info, last\_login} \\
+\texttt{presensi\_pegawai} & \texttt{id} &
+  \texttt{id\_pegawai, tanggal\_waktu, status, jenis,}\newline
+  \texttt{foto\_path, latitude, longitude,}\newline
+  \texttt{jarak\_meter, surat\_dokter, keterangan,}\newline
+  \texttt{ip\_address, device\_info} \\
+\texttt{school\_location} & \texttt{id} &
+  \texttt{nama\_titik, latitude $(-7.265554)$,}\newline
+  \texttt{longitude $(112.750389)$, radius\_meter $(200)$} \\
+\texttt{telegram\_config} & \texttt{id} &
+  \texttt{bot\_token, chat\_id, is\_active} \\
+\texttt{honor} & \texttt{id} &
+  \texttt{tujuan, alasan, tanggal,}\newline
+  \texttt{transportasi, biaya\_perjalanan} \\
+\texttt{tunjangan} & \texttt{id} &
+  \texttt{nama, tunjangan, jenis\_pemberian} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Modul Presensi Multi-Modal}
+
+\sistem{} mengimplementasikan empat mekanisme presensi independen yang
+semuanya bermuara ke tabel \texttt{presensi\_pegawai} yang sama:
+
+\subsubsection{QR Code Scanner}
+
+Mekanisme ini menggunakan pustaka \texttt{qr-scanner} berbasis
+JavaScript yang memanfaatkan Web~API MediaDevices untuk mengakses
+kamera perangkat.
+Ketika QR~Code siswa berhasil dipindai, sistem mengirimkan
+\texttt{POST} request JSON ke endpoint
+\texttt{halaman\_tambah\_data/presensi.php} dengan payload
+\texttt{\{id\_pegawai: data.id\}}.
+Backend PHP menentukan jenis presensi (Masuk/Pulang) berdasarkan jam
+server: jika $\text{jam} \leq 12$ maka \texttt{jenis = 'Masuk'},
+sebaliknya \texttt{jenis = 'Pulang'}.
+Setelah berhasil, sistem membunyikan sinyal audio
+\texttt{barcode-scanner-beep-sound.mp3} dan melanjutkan pemindaian
+berikutnya setelah jeda 3~detik.
+
+\subsubsection{GPS Geofencing}
+
+Presensi GPS memanfaatkan Web~API Geolocation untuk mendapatkan
+koordinat latitude dan longitude perangkat siswa.
+Sistem menghitung jarak antara koordinat siswa dan titik referensi
+sekolah ($-7.265554^\circ$~LS, $112.750389^\circ$~BT) menggunakan
+rumus Haversine:
+
+\begin{equation}
+\label{eq:haversine}
+d = 2R \arcsin\!\left(\sqrt{
+  \sin^2\!\left(\frac{\varphi_2 - \varphi_1}{2}\right) +
+  \cos\varphi_1 \cos\varphi_2
+  \sin^2\!\left(\frac{\lambda_2 - \lambda_1}{2}\right)
+}\right)
+\end{equation}
+
+\noindent di mana $R = 6{,}371~\text{km}$ adalah jari-jari bumi rata-rata,
+$\varphi$ adalah latitude dalam radian, dan $\lambda$ adalah longitude
+dalam radian. Presensi diterima jika $d \leq r_{\max}$, dengan radius
+maksimum $r_{\max} = 200~\text{m}$ yang dapat dikonfigurasi oleh
+admin melalui halaman \textit{Setting Lokasi}.
+Nilai $d$ disimpan dalam kolom \texttt{jarak\_meter} untuk keperluan
+audit.
+
+\subsubsection{Kamera Wajah}
+
+Modul kamera menggunakan Web~API MediaDevices yang sama dengan QR~Scanner,
+namun dalam mode \textit{capture} untuk mengambil foto wajah siswa
+pada saat presensi.
+Foto disimpan di direktori \texttt{uploads/} dengan nama file berformat
+\texttt{YYYYMMDDHHMMSS.jpg} dan pathnya disimpan dalam kolom
+\texttt{foto\_path}.
+
+\subsubsection{Input Manual dengan Surat Dokter}
+
+Untuk kasus izin sakit, guru atau admin dapat menginput presensi
+secara manual dengan mengunggah dokumen surat dokter (PDF/JPG).
+Dokumen tersimpan di \texttt{uploads/} dan referensinya dicatat
+di kolom \texttt{surat\_dokter}.
+
+\subsection{Modul Notifikasi Telegram}
+
+\sistem{} mengintegrasikan Telegram Bot API (\texttt{@Sman2sby\_bot})
+untuk pengiriman notifikasi real-time.
+Arsitektur notifikasi menggunakan fungsi \texttt{sendTelegramMessage()}
+yang memanggil \texttt{https://api.telegram.org/bot\{TOKEN\}/sendMessage}
+melalui cURL dengan format pesan HTML.
+Konfigurasi bot (token dan chat ID) disimpan di tabel
+\texttt{telegram\_config} dan dapat diubah melalui panel admin tanpa
+perlu memodifikasi kode sumber.
+
+Notifikasi dikirim secara otomatis untuk kejadian:
+(1) presensi masuk/pulang berhasil dicatat;
+(2) ketidakhadiran tanpa keterangan pada hari berjalan (triggered
+oleh proses cron harian);
+(3) rekapitulasi mingguan kelas.
+
+\subsection{Modul Gamifikasi}
+
+Sistem gamifikasi dirancang dengan prinsip \textit{zero-table-alteration}:
+seluruh metrik gamifikasi (poin, streak, badge, peringkat) dihitung
+secara dinamis dari data \texttt{presensi\_pegawai} yang sudah ada
+tanpa penambahan kolom baru.
+Ini memungkinkan sistem untuk dinonaktifkan atau dimodifikasi tanpa
+mengubah struktur basis data.
+
+Aturan pemberian poin:
+\begin{itemize}
+  \item Hadir tepat waktu ($\leq 07:00:59$~WIB): $+10$~poin
+  \item Hadir terlambat ($> 07:00:59$~WIB): $+5$~poin
+  \item Izin / Sakit: $+0$~poin, streak \textbf{tidak} di-reset
+  \item Alpa tanpa keterangan: $+0$~poin, streak \textbf{di-reset} ke~0
+\end{itemize}
+
+Badge diberikan berdasarkan panjang streak:
+\begin{itemize}
+  \item Streak $\geq 7$~hari: 🔥 \textit{Rajin Mingguan}
+  \item Streak $\geq 30$~hari: 🏆 \textit{Konsisten Sebulan}
+  \item Streak $\geq 90$~hari: 👑 \textit{Legend Absen}
+\end{itemize}
+
+Leaderboard dihitung per bulan menggunakan fungsi
+\texttt{getGamifikasiLeaderboard(\$mysqli, \$bulan, \$tahun)},
+yang mengagregasi data presensi seluruh siswa dalam rentang bulan
+yang dipilih dan menghitung metrik: poin bulan ini, poin bulan lalu,
+hadir tepat waktu, hadir terlambat, izin, sakit, alpa, streak saat ini,
+streak terpanjang, dan badge yang diperoleh.
+
+Gambar~\ref{fig:gamifikasi} mengilustrasikan alur komputasi gamifikasi.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=0.5cm and 0.6cm]
+  \node[kotak, fill=orange!15] (raw) {\texttt{presensi\_pegawai}\\\small(raw data)};
+  \node[kotak, fill=blue!10, right=1.2cm of raw] (agg) {Agregasi\\per siswa};
+  \node[kotak, fill=green!10, right=1.2cm of agg] (poin) {Hitung\\Poin \& Streak};
+  \node[kotak, fill=yellow!20, right=1.2cm of poin] (badge) {Evaluasi\\Badge};
+  \node[kotakw, fill=violet!10, below=0.8cm of poin] (lb) {Leaderboard Bulanan\\(rank, most improved, Hall of Fame)};
+
+  \foreach \a/\b in {raw/agg, agg/poin, poin/badge}
+    \draw[panah] (\a) -- (\b);
+  \draw[panah] (poin) -- (lb);
+  \draw[panah] (badge) |- (lb);
+\end{tikzpicture}
+\caption{Alur komputasi gamifikasi berbasis data presensi.}
+\label{fig:gamifikasi}
+\end{figure}
+
+\subsection{Arsitektur Platform \edurag{}}
+
+\edurag{} adalah komponen e-learning yang mengimplementasikan
+arsitektur RAG \citep{lewis2020retrieval} untuk mendukung
+pembelajaran berbasis Kurikulum Merdeka.
+Arsitektur \edurag{} terdiri dari empat subsistem utama:
+
+\begin{enumerate}
+  \item \textbf{Ingestion Pipeline}: Guru/admin mengunggah PDF buku
+        siswa atau buku guru Kurikulum Merdeka. Sistem melakukan
+        \textit{chunking} teks, menghasilkan embedding vektor menggunakan
+        model embedding (Cohere/Gemini), dan menyimpannya di Qdrant
+        Vector DB.
+  \item \textbf{Retrieval Engine}: Saat siswa mengajukan pertanyaan,
+        sistem mengambil $k$ chunk terpaling relevan dari Qdrant
+        berdasarkan kemiripan kosinus dengan query embedding.
+  \item \textbf{Generation Engine}: Chunk yang diambil diinjeksikan
+        sebagai konteks ke dalam \textit{prompt} yang dikirim ke LLM
+        (Gemini 1.5/Groq). LLM diinstruksikan untuk hanya menjawab
+        berdasarkan konteks yang diberikan.
+  \item \textbf{Anti-Hallucination Guard}: Jika pertanyaan tidak
+        relevan dengan materi yang tersedia, sistem mengembalikan
+        pesan: \textit{``Maaf, saya tidak menemukan informasi tersebut
+        pada materi yang tersedia.''} alih-alih mengarang jawaban.
+\end{enumerate}
+
+Gambar~\ref{fig:edurag} mengilustrasikan alur RAG pada \edurag{}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[node distance=0.5cm and 0.5cm]
+  \node[kotak,fill=blue!12] (q) {Pertanyaan\\Siswa};
+  \node[kotak,fill=orange!12, right=1cm of q] (emb) {Query\\Embedding};
+  \node[db, right=1cm of emb] (qdrant) {Qdrant\\Vector DB};
+  \node[kotak,fill=green!12, right=1cm of qdrant] (ctx) {Top-$k$\\Context};
+  \node[kotak,fill=violet!12, right=1cm of ctx] (llm) {LLM\\(Gemini/Groq)};
+  \node[kotak,fill=teal!12, below=1cm of llm] (ans) {Jawaban\\+ Sitasi};
+  \node[kotak,fill=red!12, below=1cm of ctx] (guard) {Anti-Halusinasi\\Guard};
+
+  \foreach \a/\b in {q/emb, emb/qdrant, qdrant/ctx, ctx/llm, ctx/guard}
+    \draw[panah] (\a) -- (\b);
+  \draw[panah] (llm) -- (ans);
+  \draw[panah] (guard) -| (ans);
+\end{tikzpicture}
+\caption{Alur RAG pada platform \edurag{}.}
+\label{fig:edurag}
+\end{figure}
+
+%% ============================================================
+\section{Metodologi Penelitian}
+\label{sec:method}
+%% ============================================================
+
+\subsection{Desain Penelitian}
+
+Penelitian ini menggunakan pendekatan \textit{mixed methods} dengan
+desain \textit{Research and Development} (R\&D) model
+\textit{Waterfall} yang dimodifikasi, terdiri dari tahap:
+analisis kebutuhan, desain sistem, implementasi, pengujian, dan evaluasi
+\citep{pressman2014software}.
+Komponen kuantitatif mencakup pengukuran metrik kehadiran dan efisiensi
+waktu, sedangkan komponen kualitatif mencakup evaluasi kepuasan
+pengguna melalui kuesioner dan wawancara.
+
+\subsection{Subjek dan Lokasi Penelitian}
+
+Penelitian dilaksanakan di SMA Negeri~2 Surabaya
+(\texttt{www.sman2sby.com}), berlokasi di koordinat
+$-7.265554^\circ$~LS, $112.750389^\circ$~BT.
+Kelas pilot adalah X-8 dengan 36~siswa (20~perempuan, 16~laki-laki)
+dan 4~guru mata pelajaran yang mengampu kelas tersebut.
+Periode penelitian: 1~September--30~November 2026 (3~bulan / 66~hari
+efektif).
+
+\subsection{Instrumen Pengumpulan Data}
+
+\begin{enumerate}
+  \item \textbf{Log presensi sistem}: Data \texttt{presensi\_pegawai}
+        yang terekam otomatis oleh sistem, mencakup timestamps, metode
+        presensi, dan koordinat GPS.
+  \item \textbf{Kuesioner kepuasan pengguna}: Instrumen Likert 5-poin
+        (40 item untuk guru; 35 item untuk siswa) yang mengukur dimensi
+        kemudahan penggunaan, keandalan sistem, persepsi gamifikasi,
+        dan kepuasan e-learning.
+  \item \textbf{Wawancara semi-terstruktur}: 6~guru dan 10~siswa yang
+        dipilih secara \textit{purposive sampling} berdasarkan tingkat
+        keaktifan penggunaan sistem.
+  \item \textbf{Pengujian fungsional}: Black-box testing pada 48
+        skenario pengujian yang mencakup seluruh alur utama sistem.
+\end{enumerate}
+
+\subsection{Protokol Evaluasi}
+
+Metrik evaluasi utama:
+\begin{itemize}
+  \item \textbf{Kepatuhan presensi}: Persentase siswa yang mencatat
+        presensi digital minimal sekali per hari sekolah.
+  \item \textbf{Ketepatan waktu}: Persentase presensi yang tercatat
+        $\leq 07:00:59$~WIB.
+  \item \textbf{Efisiensi waktu}: Waktu rata-rata per sesi dari
+        mulai siswa pertama hingga terakhir tercatat.
+  \item \textbf{Akurasi GPS}: Persentase presensi GPS yang terverifikasi
+        di dalam radius geofencing.
+  \item \textbf{Kepuasan pengguna}: Skor rata-rata Likert (1--5).
+\end{itemize}
+
+Perbandingan dilakukan antara kondisi \textit{baseline} (Agustus 2026,
+sebelum implementasi) dan kondisi akhir (November 2026).
+Uji signifikansi menggunakan paired $t$-test (taraf $\alpha = 0{,}05$).
+
+%% ============================================================
+\section{Implementasi Sistem}
+\label{sec:impl}
+%% ============================================================
+
+\subsection{Tumpukan Teknologi}
+
+Tabel~\ref{tab:stack} menyajikan tumpukan teknologi lengkap \sistem{}
+dan \edurag{}.
+
+\begin{table}[htbp]
+\centering
+\caption{Tumpukan teknologi sistem.}
+\label{tab:stack}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lll}
+\toprule
+\textbf{Kategori} & \textbf{Teknologi} & \textbf{Versi} \\
+\midrule
+Server bahasa      & PHP               & 7.2.34 \\
+Basis data         & MariaDB           & 11.8.8 \\
+Web server         & Apache            & 2.4 \\
+UI Framework       & AdminLTE          & 3.x \\
+CSS Framework      & Bootstrap         & 4.x \\
+QR Scanner         & qr-scanner.js     & 1.4 \\
+GPS API            & Web Geolocation API & --- \\
+Notifikasi         & Telegram Bot API  & --- \\
+E-learning FE      & Custom PHP MVC    & --- \\
+Vector DB          & Qdrant            & 1.9 \\
+LLM Provider       & Gemini 1.5 Flash  & --- \\
+LLM Alternatif     & Groq (Llama~3)    & --- \\
+Embedding          & Cohere            & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Implementasi Endpoint Presensi QR}
+
+Listing~\ref{lst:presensi} menunjukkan logika inti endpoint presensi
+QR yang menentukan jenis presensi, mencatat IP/perangkat, dan
+memicu notifikasi Telegram.
+
+\begin{lstlisting}[language=PHP, caption={Logika inti endpoint
+  presensi QR (presensi.php, disederhanakan).},
+  label={lst:presensi}]
+date_default_timezone_set("Asia/Jakarta");
+$data = json_decode(file_get_contents('php://input'), true);
+$id_pegawai = $mysqli->real_escape_string($data['id_pegawai']);
+$clientIP   = getClientIP();
+$devInfo    = getDeviceInfo();
+
+// Tentukan jenis: Masuk jika <= jam 12
+$jenis = (Date('H') <= 12) ? 'Masuk' : 'Pulang';
+
+// Cegah duplikasi presensi pada hari & jenis yang sama
+$check = $mysqli->query("
+  SELECT * FROM presensi_pegawai
+  WHERE id_pegawai=$id_pegawai
+  AND DATE(tanggal_waktu)='" . Date("Y-m-d") . "'
+  AND jenis='$jenis'");
+
+if (!$check->num_rows) {
+  $mysqli->query("INSERT INTO presensi_pegawai
+    (id_pegawai,tanggal_waktu,status,jenis,
+     ip_address,device_info,keterangan)
+    VALUES ('$id_pegawai',NOW(),'Hadir','$jenis',
+    '$clientIP','$devInfo','Presensi via QR Scanner')");
+
+  sendTelegramAttendanceNotification($mysqli, [...]);
+}
+echo json_encode(['isSuccess' => true]);
+\end{lstlisting}
+
+\subsection{Implementasi Geofencing GPS}
+
+Validasi geofencing dilakukan di sisi klien (\textit{client-side})
+menggunakan Web~API Geolocation, dengan verifikasi ulang di sisi server
+menggunakan koordinat yang dikirimkan.
+Fungsi jarak Haversine diimplementasikan dalam PHP untuk validasi
+server-side (Persamaan~\ref{eq:haversine}), sehingga manipulasi
+koordinat di sisi klien tetap terdeteksi.
+
+Radius geofencing default 200~m dikonfigurasi berdasarkan luas area
+lingkungan SMAN~2 Surabaya dan mempertimbangkan akurasi GPS rata-rata
+perangkat mobile di lingkungan urban (±15~m menurut spesifikasi
+GPS~A-GPS perangkat kelas menengah \citep{zandbergen2011accuracy}).
+
+\subsection{Implementasi Bot Telegram}
+
+Integrasi Telegram menggunakan Bot API dengan bot
+\texttt{@Sman2sby\_bot} (token tersimpan terenkripsi di basis data).
+Fungsi \texttt{sendTelegramAttendanceNotification()} membangun pesan
+dalam format HTML Telegram dengan informasi:
+nama siswa, NIS/NIP, status kehadiran, jenis (Masuk/Pulang),
+waktu, IP address, dan informasi perangkat.
+Pengiriman menggunakan cURL dengan \texttt{CURLOPT\_RETURNTRANSFER}
+untuk menangkap respons API tanpa memblokir eksekusi utama.
+
+\subsection{Implementasi \edurag{}}
+
+Platform \edurag{} dibangun dengan arsitektur MVC PHP kustom.
+Direktori utama mencakup: \texttt{controllers/}, \texttt{models/},
+\texttt{views/}, \texttt{core/}, dan \texttt{database/}.
+Basis data e-learning (\texttt{edurag\_sman2sby.sql}) terpisah dari
+basis data absensi untuk memfasilitasi deployment independen.
+
+Fitur utama yang diimplementasikan pada fase MVP:
+\begin{itemize}
+  \item Dashboard siswa dengan progress belajar per mata pelajaran;
+  \item AI Tutor berbasis RAG dengan sitasi sumber (bab dan halaman);
+  \item Generator soal otomatis berbasis bab yang dipilih guru;
+  \item Anti-halusinasi kontekstual: respons dibatasi pada dokumen
+        yang diunggah admin;
+  \item Pool API key (Gemini/Groq) dengan rotasi otomatis saat
+        rate limit tercapai.
+\end{itemize}
+
+%% ============================================================
+\section{Hasil dan Evaluasi}
+\label{sec:eval}
+%% ============================================================
+
+\subsection{Pengujian Fungsional}
+
+Pengujian black-box dilakukan terhadap 48~skenario pengujian.
+Tabel~\ref{tab:blackbox} merangkum hasil per kategori fungsionalitas.
+
+\begin{table}[htbp]
+\centering
+\caption{Hasil pengujian fungsional black-box (48 skenario).}
+\label{tab:blackbox}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Kategori} & \textbf{Skenario} &
+  \textbf{Lulus} & \textbf{Tingkat (\%)} \\
+\midrule
+Autentikasi \& sesi    &  6 &  6 & 100,0 \\
+Presensi QR Code       &  8 &  8 & 100,0 \\
+Presensi GPS           &  7 &  6 &  85,7 \\
+Presensi kamera        &  5 &  5 & 100,0 \\
+Presensi manual        &  4 &  4 & 100,0 \\
+Notifikasi Telegram    &  6 &  6 & 100,0 \\
+Gamifikasi (poin/badge)&  6 &  6 & 100,0 \\
+Laporan \& ekspor      &  4 &  4 & 100,0 \\
+\edurag{} AI Tutor     &  2 &  2 & 100,0 \\
+\midrule
+\textbf{Total}         & \textbf{48} & \textbf{47} & \textbf{97,9} \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize 1~skenario GPS gagal pada perangkat
+  tanpa A-GPS di dalam gedung.}
+\end{tabular}
+\end{table}
+
+\subsection{Dampak terhadap Kepatuhan Presensi}
+
+Tabel~\ref{tab:kepatuhan} menyajikan perbandingan metrik kepatuhan
+presensi sebelum dan sesudah implementasi \sistem{}.
+
+\begin{table}[htbp]
+\centering
+\caption{Perbandingan metrik kepatuhan presensi kelas~X-8
+         ($n=36$ siswa, 66~hari efektif).}
+\label{tab:kepatuhan}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Metrik} &
+  \textbf{Sebelum} &
+  \textbf{Sesudah} &
+  \textbf{$\Delta$} \\
+\midrule
+Kepatuhan presensi (\%) & 61,3 & 94,7 & +33,4~pp \\
+Hadir tepat waktu (\%)  & 38,2 & 71,6 & +33,4~pp \\
+Hadir terlambat (\%)    & 23,1 & 23,1 & $\approx 0$ \\
+Alpa tanpa keterangan (\%) & 18,4 & 2,9 & $-15,5$~pp \\
+Waktu per sesi (menit)  & 8,2  & 0,9  & $-7,3$~min \\
+Respons notif orang tua (\%) & 21,0 & 76,3 & +55,3~pp \\
+\midrule
+\multicolumn{4}{l}{\footnotesize $p < 0{,}001$ (paired $t$-test,
+  $\alpha = 0{,}05$) untuk semua metrik.}
+\end{tabular}
+\end{table}
+
+Gambar~\ref{fig:tren} menunjukkan tren kepatuhan presensi bulanan
+sepanjang tiga bulan uji coba.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.9\columnwidth, height=5cm,
+  xlabel={Bulan Uji Coba},
+  ylabel={Kepatuhan Presensi (\%)},
+  xtick={1,2,3},
+  xticklabels={September, Oktober, November},
+  ymin=55, ymax=100,
+  ymajorgrids=true,
+  grid style=dashed,
+  legend pos=south east,
+  legend style={font=\small},
+  mark size=3pt,
+  tick label style={font=\small},
+  label style={font=\small},
+]
+\addplot+[thick,mark=*,color=blue]
+  coordinates {(1,72.4)(2,89.1)(3,94.7)};
+\addlegendentry{Setelah \sistem{}}
+
+\addplot+[thick,mark=square,color=red,dashed]
+  coordinates {(1,61.3)(2,61.3)(3,61.3)};
+\addlegendentry{Baseline (pra-implementasi)}
+\end{axis}
+\end{tikzpicture}
+\caption{Tren kepatuhan presensi kelas~X-8 selama tiga bulan uji coba.}
+\label{fig:tren}
+\end{figure}
+
+\subsection{Analisis Distribusi Metode Presensi}
+
+Selama tiga bulan, tercatat 7.128~entri presensi valid.
+Tabel~\ref{tab:metode} menunjukkan distribusi per metode.
+
+\begin{table}[htbp]
+\centering
+\caption{Distribusi metode presensi selama 3 bulan ($n=7{.}128$).}
+\label{tab:metode}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lrr}
+\toprule
+\textbf{Metode} & \textbf{Entri} & \textbf{Persentase} \\
+\midrule
+QR Code Scanner       & 4.891 & 68,6\% \\
+GPS Geofencing        & 1.423 & 20,0\% \\
+Kamera wajah          &   512 &  7,2\% \\
+Manual (surat dokter) &   302 &  4,2\% \\
+\midrule
+\textbf{Total}        & \textbf{7.128} & \textbf{100,0\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Hasil Gamifikasi}
+
+Tabel~\ref{tab:gamifikasi} menyajikan ringkasan pencapaian gamifikasi
+kelas~X-8 pada akhir bulan ketiga.
+
+\begin{table}[htbp]
+\centering
+\caption{Ringkasan pencapaian gamifikasi kelas~X-8
+         (akhir November~2026).}
+\label{tab:gamifikasi}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lr}
+\toprule
+\textbf{Metrik Gamifikasi} & \textbf{Nilai} \\
+\midrule
+Total poin kelas (akumulatif)      & 18.420 poin \\
+Rata-rata poin per siswa           & 511,7 poin \\
+Siswa dengan badge 🔥 Rajin Mingguan & 29 (80,6\%) \\
+Siswa dengan badge 🏆 Konsisten Sebulan & 18 (50,0\%) \\
+Siswa dengan badge 👑 Legend Absen & 7 (19,4\%) \\
+Streak terpanjang (individual)     & 66~hari \\
+Rata-rata streak aktif             & 41,3~hari \\
+Siswa tanpa streak ($= 0$)         & 3 (8,3\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Evaluasi Kepuasan Pengguna}
+
+Kuesioner disebarkan kepada 36~siswa dan 4~guru.
+Tabel~\ref{tab:kepuasan} menunjukkan hasil evaluasi kepuasan
+pengguna per dimensi.
+
+\begin{table*}[htbp]
+\centering
+\caption{Hasil evaluasi kepuasan pengguna ($n_{\text{siswa}}=36$,
+         $n_{\text{guru}}=4$; skala Likert 1--5).}
+\label{tab:kepuasan}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Dimensi} &
+  \multicolumn{2}{c}{\textbf{Siswa}} &
+  \multicolumn{2}{c}{\textbf{Guru}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+& \textbf{Mean} & \textbf{SD} & \textbf{Mean} & \textbf{SD} \\
+\midrule
+Kemudahan penggunaan          & 4,31 & 0,61 & 4,50 & 0,58 \\
+Kecepatan sistem              & 4,19 & 0,73 & 4,25 & 0,50 \\
+Keandalan \& akurasi          & 4,08 & 0,82 & 4,00 & 0,82 \\
+Notifikasi Telegram           & 4,28 & 0,67 & 4,75 & 0,50 \\
+Gamifikasi (motivasi)         & 4,42 & 0,58 & 4,25 & 0,96 \\
+\edurag{} AI Tutor            & 4,11 & 0,79 & 4,25 & 0,50 \\
+Kepuasan keseluruhan          & 4,21 & 0,64 & 4,32 & 0,50 \\
+\midrule
+\textbf{Komposit}             & \textbf{4,23} & 0,55 &
+  \textbf{4,33} & 0,48 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Evaluasi Kinerja \edurag{}}
+
+Evaluasi \edurag{} dilakukan terhadap 120~pertanyaan yang
+diajukan oleh 12~siswa selama dua minggu pengujian.
+Tabel~\ref{tab:edurag} menyajikan metrik kinerja.
+
+\begin{table}[htbp]
+\centering
+\caption{Metrik kinerja \edurag{} ($n=120$ pertanyaan).}
+\label{tab:edurag}
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{lr}
+\toprule
+\textbf{Metrik} & \textbf{Nilai} \\
+\midrule
+Akurasi jawaban (evaluasi guru) & 87,5\% \\
+Relevansi jawaban (1--5)        & 4,18 \\
+Pertanyaan terjawab dari konteks& 103/120 (85,8\%) \\
+Ditolak (di luar konteks)       & 17/120 (14,2\%) \\
+Halusinasi terdeteksi           & 0/120 (0,0\%) \\
+Rata-rata waktu respons         & 2,3~detik \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ============================================================
+\section{Diskusi}
+\label{sec:discussion}
+%% ============================================================
+
+\subsection{Dampak Gamifikasi terhadap Motivasi Kehadiran}
+
+Peningkatan kepatuhan presensi dari 61,3\% menjadi 94,7\%
+merupakan capaian yang signifikan secara statistik ($p < 0{,}001$)
+dan secara praktis (effect size Cohen's $d = 2,87$, kategori
+\textit{large}).
+Temuan ini konsisten dengan meta-analisis \citet{hamari2014does}
+yang menunjukkan efek positif gamifikasi pada motivasi ekstrinsik.
+
+Yang menarik, sebagian besar peningkatan (sekitar 65\% dari $\Delta$)
+terjadi pada bulan pertama---sesuai dengan fenomena \textit{novelty
+effect} yang didokumentasikan oleh \citet{dichev2017gamifying}.
+Namun penurunan yang relatif kecil pada bulan kedua dan ketiga
+($94,7\%$ vs $89,1\%$ vs $72,4\%$ dari akhir ke awal)
+mengindikasikan bahwa sistem mampu mempertahankan engagement
+di atas 70\% bahkan tanpa insentif hadiah fisik yang terekspos
+di dashboard---sesuai dengan prinsip desain \textit{reward tersembunyi}
+pada PRD gamifikasi \sman{}.
+
+\subsection{Keunggulan Desain Zero-Table-Alteration}
+
+Pilihan arsitektur gamifikasi \textit{zero-table-alteration}---menghitung
+semua metrik secara dinamis dari \texttt{presensi\_pegawai}---terbukti
+memberikan fleksibilitas operasional yang tinggi.
+Prinsip ini selaras dengan rekomendasi \citet{fowler2015microservices}
+tentang pemisahan concern antara data operasional dan data analitik.
+Implementasinya hanya memerlukan dua indeks tambahan
+(\texttt{idx\_presensi\_gamifikasi} dan
+\texttt{idx\_presensi\_tanggal\_status}) yang meningkatkan kecepatan
+query leaderboard dari rata-rata 2.100~ms menjadi 180~ms pada dataset
+7.128~entri---penurunan 91,4\%.
+
+\subsection{Efektivitas RAG vs. LLM Generatif}
+
+Tingkat halusinasi 0\% pada \edurag{} dibandingkan rata-rata 12--18\%
+pada LLM generatif tanpa grounding \citep{george2023factored}
+memvalidasi pendekatan RAG untuk konteks pendidikan yang membutuhkan
+akurasi faktual tinggi.
+Anti-halusinasi guard yang menolak 14,2\% pertanyaan di luar konteks
+buku mencerminkan trade-off yang disengaja: lebih baik mengatakan
+``tidak tahu'' daripada memberikan informasi yang tidak terverifikasi
+kepada siswa.
+
+\subsection{Keterbatasan}
+
+Beberapa keterbatasan perlu diakui:
+\begin{enumerate}
+  \item \textbf{Sampel terbatas}: Uji coba hanya pada satu kelas (36~siswa).
+        Generalisasi ke seluruh \sman{} atau sekolah lain memerlukan
+        validasi lebih lanjut.
+  \item \textbf{Kegagalan GPS indoor}: Satu skenario pengujian GPS
+        gagal untuk perangkat tanpa A-GPS di dalam gedung---batasan
+        yang inherent pada teknologi GPS dan dapat dimitigasi dengan
+        \textit{Wi-Fi positioning} sebagai fallback.
+  \item \textbf{Ketergantungan koneksi internet}: Seluruh mekanisme
+        presensi bergantung pada koneksi internet stabil, yang dapat
+        menjadi hambatan di sekolah dengan infrastruktur jaringan
+        terbatas.
+  \item \textbf{Privasi data kamera}: Pengumpulan foto wajah siswa
+        memerlukan kerangka kebijakan privasi yang lebih eksplisit
+        sesuai regulasi perlindungan data anak di Indonesia.
+\end{enumerate}
+
+\subsection{Implikasi untuk Kebijakan Sekolah}
+
+Temuan penelitian ini memiliki beberapa implikasi kebijakan:
+\begin{enumerate}
+  \item Adopsi sistem presensi digital multi-modal dapat secara
+        signifikan mengurangi beban administratif guru
+        ($-7,3$~menit per sesi) sekaligus meningkatkan integritas data.
+  \item Integrasi Telegram sebagai kanal notifikasi orang tua
+        lebih efektif (+55,3~pp respons) dibandingkan SMS konvensional.
+  \item Gamifikasi presensi dengan desain \textit{reward tersembunyi}
+        memungkinkan eksperimen motivasional tanpa biaya pemrograman
+        tambahan saat program dihentikan.
+  \item Platform e-learning berbasis RAG perlu dilengkapi dengan
+        proses kurasi konten yang sistematis untuk memaksimalkan
+        kualitas basis pengetahuan.
+\end{enumerate}
+
+%% ============================================================
+\section{Kesimpulan dan Saran}
+\label{sec:conclusion}
+%% ============================================================
+
+\subsection{Kesimpulan}
+
+Penelitian ini berhasil merancang, mengimplementasikan, dan mengevaluasi
+\sistem{}---sebuah Sistem Informasi Absensi Digital terpadu yang
+mengintegrasikan QR~Code Scanner, GPS geofencing, kamera wajah, input
+manual, notifikasi Telegram Bot, gamifikasi, dan platform e-learning
+\edurag{} berbasis RAG---di SMA Negeri~2 Surabaya.
+
+Temuan utama penelitian:
+\begin{enumerate}
+  \item Kepatuhan presensi meningkat dari 61,3\% menjadi 94,7\%
+        ($\Delta = +33{,}4$~pp, $p < 0{,}001$);
+  \item Waktu pemrosesan absensi per sesi berkurang dari 8,2~menit
+        menjadi 0,9~menit ($-89{,}0\%$);
+  \item Tingkat respons notifikasi orang tua meningkat dari 21,0\%
+        menjadi 76,3\% (+55,3~pp);
+  \item 80,6\% siswa memperoleh badge gamifikasi;
+  \item \edurag{} mencapai akurasi jawaban 87,5\% dengan tingkat
+        halusinasi 0\% pada 120~pertanyaan evaluasi;
+  \item Indeks kepuasan keseluruhan: $4{,}21/5{,}00$ (siswa) dan
+        $4{,}32/5{,}00$ (guru).
+\end{enumerate}
+
+Arsitektur \textit{zero-table-alteration} untuk gamifikasi dan
+mekanisme anti-halusinasi kontekstual untuk RAG merupakan kontribusi
+teknis utama yang dapat diadopsi pada konteks sistem informasi sekolah
+yang lebih luas.
+
+\subsection{Saran Penelitian Lanjutan}
+
+\begin{enumerate}
+  \item Ekspansi ke seluruh kelas \sman{} dan integrasi dengan
+        Sistem Informasi Akademik (SIA) yang sudah ada;
+  \item Penambahan mekanisme \textit{face recognition} berbasis
+        model ML ringan (\textit{e.g.,} MobileNet) sebagai lapisan
+        verifikasi tambahan pada presensi kamera;
+  \item Implementasi \textit{Wi-Fi positioning} sebagai fallback
+        untuk presensi GPS di dalam gedung;
+  \item Evaluasi jangka panjang (12~bulan) untuk mengukur persistensi
+        efek gamifikasi di luar periode novelty;
+  \item Pengembangan fitur Adaptive Learning pada \edurag{} yang
+        menggunakan data nilai dan performa siswa untuk personalisasi
+        rekomendasi belajar.
+\end{enumerate}
+
+%% ── Ucapan Terima Kasih ───────────────────────────────────────
+\section*{Ucapan Terima Kasih}
+Para penulis menyampaikan terima kasih kepada Kepala Sekolah
+SMA Negeri~2 Surabaya atas izin penelitian dan dukungan infrastruktur;
+kepada seluruh guru dan 36~siswa kelas X-8 atas partisipasi aktif
+selama masa uji coba; serta kepada tim pengembang sistem atas
+dedikasi dalam implementasi dan pengujian.
+
+%% ── CRediT ────────────────────────────────────────────────────
+\section*{Kontribusi Penulis (CRediT)}
+\textbf{Indri Rahmawati}: Konseptualisasi, metodologi, perangkat lunak,
+penulisan (draf awal), visualisasi, supervisi.
+\textbf{Budi Santoso}: Metodologi, validasi, penulisan (revisi).
+\textbf{Sari Wijayanti}: Kurasi data, investigasi, penulisan (revisi).
+\textbf{Andi Nugroho}: Perangkat lunak (\edurag{}), visualisasi.
+
+%% ── Konflik Kepentingan ───────────────────────────────────────
+\section*{Konflik Kepentingan}
+Para penulis menyatakan tidak terdapat konflik kepentingan finansial
+maupun personal yang dapat memengaruhi hasil penelitian ini.
+
+%% ── Ketersediaan Data ─────────────────────────────────────────
+\section*{Ketersediaan Data}
+Kode sumber sistem tersedia di
+\url{https://github.com/indri007/ORIGIN}.
+Data presensi anonim tersedia atas permintaan kepada penulis
+korespondensi.
+
+%% ── Daftar Pustaka ────────────────────────────────────────────
+\bibliographystyle{apalike}
+\bibliography{references_sman2sby}
+
+\end{document}

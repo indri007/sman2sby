@@ -1,0 +1,52 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../database"
+		},
+		{
+			"path": "../elearning"
+		},
+		{
+			"path": "../game"
+		},
+		{
+			"path": "../halaman_auth"
+		},
+		{
+			"path": "../halaman_cetak_laporan"
+		},
+		{
+			"path": "../halaman_detail"
+		},
+		{
+			"path": "../halaman_edit_data"
+		},
+		{
+			"path": "../halaman_hapus_data"
+		},
+		{
+			"path": "../halaman_lainnya"
+		},
+		{
+			"path": "../halaman_laporan"
+		},
+		{
+			"path": "../halaman_tambah_data"
+		},
+		{
+			"path": "../halaman_tampil_data"
+		},
+		{
+			"path": "../templates"
+		},
+		{
+			"path": "../uploads"
+		},
+		{
+			"path": "../utils"
+		}
+	]
+}

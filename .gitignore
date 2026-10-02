@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+# Environment / secrets
+*.env
+.env
+.env.*
+config.env
+
+# Database credentials — JANGAN push ke GitHub
+database/koneksi.php
+
+# Upload files (bisa besar)
+uploads/*
+!uploads/.gitkeep
+
+# Compiled / cache
+*.log
+*.cache
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+
+# Archives
+*.zip
+*.tar.gz
